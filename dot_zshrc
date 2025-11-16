@@ -1,3 +1,41 @@
+case "$OSTYPE" in 
+    darwin*)
+    # Homebrew conf
+    export HOMEBREW_NO_ANALYTICS=1
+    export HOMEBREW_NO_INSECURE_REDIRECT=1
+    export HOMEBREW_CASK_OPS=--require-sha
+
+    # Editor conf
+    export EDITOR=/opt/homebrew/bin/nvim
+    export VISUAL=/opt/homebrew/bin/nvim
+
+    # oh-my-zsh
+    export ZSH="/Users/$USER/.oh-my-zsh"
+        
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/Users/alexi/opt/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/Users/alexi/opt/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/Users/alexi/opt/miniconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/Users/alexi/opt/miniconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
+
+    source /opt/homebrew/opt/powerlevel10k/share/powerlevel10k/powerlevel10k.zsh-theme
+    ;;
+    linux*)
+    export ZSH="/home/$USER/.oh-my-zsh"
+    export TERM=xterm-256color
+    source /home/$USER/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+    ;;
+esac
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -7,24 +45,29 @@ fi
 
 zmodload zsh/zprof
 
-export EDITOR=/opt/homebrew/bin/hx
-export VISUAL=/opt/homebrew/bin/hx
-export PATH=/user/local/bin/termpdf.py:$PATH
-export ZSH="/Users/alexi/.oh-my-zsh"
+alias get_idf='. $HOME/Desktop/Dev/Rust/esp/esp-idf/export.sh'
+
+alias unlock='xattr -d com.apple.quarantine'
+# golang
+export PATH=$HOME/go/bin:$PATH
+
+export PATH="$HOME/Library/Application\ Support/xemu/xemu/extract-xiso/build:$PATH"
 
 export NVM_LAZY_LOAD=true
 export NVM_COMPLETION=true
 
-#ZSH_THEME="starship"
 COMPLETION_WAITING_DOTS="true"
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+alias history="history 1"
+HISTSIZE=99999
+HISTFILESIZE=99999
+SAVEHIST=$HISTSIZE
+setopt SHARE_HISTORY HIST_IGNORE_DUPS
 
 plugins=(
 	git
+  golang
+  rust
 	zsh-autosuggestions
 	fzf
 	dotenv
@@ -35,36 +78,23 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-alias ssh="kitty +kitten ssh"
+alias d="kitty +kitten diff"
+alias icat="kitty +kitten icat"
 alias forecast="curl wttr.in"
 alias update_kitty="curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin"
 set -o noclobber
-
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/alexi/opt/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/alexi/opt/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/alexi/opt/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/alexi/opt/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Secretive Config
-export SSH_AUTH_SOCK=/Users/alexi/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
 
-cd() { builtin cd "$@" && ls; }
-source /opt/homebrew/opt/powerlevel10k/powerlevel10k.zsh-theme
+cdl() { builtin cd "$@" && ls; }
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/alexi/.lmstudio/bin"
+# End of LM Studio CLI section
+
